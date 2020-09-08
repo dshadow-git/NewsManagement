@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.mapper.UserMapper">
+
+    <insert id="saveByRegister" parameterType="com.training.dao.UserDao">
+        insert into user(user_id, phone, name, password)
+        values (#{userId}, #{phone}, #{name}, #{password})
+    </insert>
+
+    <update id="updateIconById">
+        update from user set icon = #{param2} where user_id = #{param1}
+    </update>
+
+    <update id="updateNameById">
+        update from user set name = #{param2} where user_id = #{param1}
+    </update>
+
+    <update id="updatePwdById">
+        update from user set password = #{param2} where user_id = #{param1}
+    </update>
+
+    <select id="selectAll" resultType="com.training.dao.UserDao">
+        select * from user
+    </select>
+
+    <select id="selectById" resultType="com.training.dao.UserDao">
+        select * from user where user_id = #{id}
+    </select>
+
+    <select id="selectByPhone" resultType="com.training.dao.UserDao">
+        select * from user where phone = #{phone}
+    </select>
+
+
+</mapper>
