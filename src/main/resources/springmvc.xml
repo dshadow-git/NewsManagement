@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- spring自动扫描base-pack目录下的所有Java文件，包括子目录。如果扫描到有相关注解的类，就把这些类注册为Spring的bean。 -->
+    <context:component-scan base-package="com.training.controller"/>
+
+    <!-- 开启依赖注入的注解解析器-->
+    <context:annotation-config/>
+
+    <!-- 配置开启基于注解解释器映射器-->
+    <mvc:annotation-driven/>
+
+    <!-- 将静态资源的处理有springmvc框架交回给web应用服务器处理（也就是对静态资源的放行）-->
+    <mvc:default-servlet-handler/>
+
+    <!--配置视图解析器， 作用是把一个逻辑视图（String）转换成一个具体的物理视图-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+</beans>
