@@ -38,6 +38,8 @@ public class UserController {
         response.getWriter().println(jsonString);
     }
 
+
+
     @RequestMapping(value = "/login")
     public void loginUser(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
