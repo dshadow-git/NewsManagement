@@ -8,15 +8,20 @@
     </insert>
 
     <update id="updateIconById">
-        update from user set icon = #{param2} where user_id = #{param1}
+        update user set icon = #{param2} where user_id = #{param1}
     </update>
 
     <update id="updateNameById">
-        update from user set name = #{param2} where user_id = #{param1}
+        update user set name = #{param2} where user_id = #{param1}
     </update>
 
     <update id="updatePwdById">
-        update from user set password = #{param2} where user_id = #{param1}
+        update user set password = #{param2} where user_id = #{param1}
+    </update>
+
+    <update id="updateStatus">
+        update user set status = #{param2} where user_id = #{param1}
+
     </update>
 
     <select id="selectAll" resultType="com.training.dao.UserDao">
@@ -29,6 +34,10 @@
 
     <select id="selectByPhone" resultType="com.training.dao.UserDao">
         select * from user where phone = #{phone}
+    </select>
+
+    <select id="getStatus" resultType="java.lang.Boolean">
+        select status from user where user_id = #{id};
     </select>
 
 

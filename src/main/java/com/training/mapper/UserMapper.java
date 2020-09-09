@@ -27,4 +27,10 @@ public interface UserMapper {
     //根据用户电话号码获取用户数据
     public UserDao selectByPhone(String phone);
 
+    //根据用户id设置登录状态
+    public void updateStatus(String id, boolean status);
+
+    //根据用户id获取用户登录状态
+    public Boolean getStatus(String id);
+
 }
