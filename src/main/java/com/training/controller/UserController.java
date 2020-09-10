@@ -2,8 +2,11 @@ package com.training.controller;
 
 import com.google.gson.Gson;
 import com.training.Callback;
+import com.training.SpareData;
 import com.training.dao.UserDao;
+import com.training.dao.CoverDao;
 import com.training.service.UserService;
+import com.training.utils.Base64Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +25,10 @@ public class UserController {
     @Autowired
     UserService service;
 
-    @RequestMapping(value = "/register")
+    //处理登录请求
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public void saveRegisterUser(@RequestBody UserDao user, HttpServletResponse response, HttpServletRequest request) throws IOException {
+    public void saveRegisterUser(@RequestBody UserDao user, HttpServletResponse response) throws IOException {
         //设置传输数据的编码形式
         response.setContentType("text/html;charset=utf-8");
 
@@ -38,9 +42,8 @@ public class UserController {
         response.getWriter().println(jsonString);
     }
 
-
-
-    @RequestMapping(value = "/login")
+    //处理登录请求
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public void loginUser(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         //通过request对象获取客户端传来的参数
@@ -50,7 +53,8 @@ public class UserController {
         response.getWriter().println(new Gson().toJson(callback));
     }
 
-    @RequestMapping(value = "/update/name")
+    //处理昵称更改请求
+    @RequestMapping(value = "/update/name", method = RequestMethod.GET)
     public void updateUserName(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         String id = request.getParameter("userId");
@@ -58,23 +62,44 @@ public class UserController {
         response.getWriter().println(new Gson().toJson(service.updateNameById(id, value)));
     }
 
-    @RequestMapping(value = "/update/pwd")
+    //处理密码更改请求
+    @RequestMapping(value = "/update/pwd", method = RequestMethod.GET)
     public void updateUserPwd(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         String id = request.getParameter("userId");
         String oldPwd = request.getParameter("oldPassword");
         String newPwd = request.getParameter("newPassword");
-        response.getWriter().println(service.updatePwdById(id, oldPwd, newPwd));
+        response.getWriter().println(new Gson().toJson(service.updatePwdById(id, oldPwd, newPwd)));
     }
 
-    @RequestMapping(value = "/select/id")
+    //处理头像更改请求
+    @RequestMapping(value = "/update/img", method = RequestMethod.POST)
+    @ResponseBody
+    public void updateUserImg(@RequestBody CoverDao img, HttpServletResponse response) throws IOException {
+        //根据用户id创建用户头像路径
+        String coverFileName = "img/user/" + img.getUserId() + 0 + ".jpg";
+        Callback<UserDao> callback;
+        //将传入的Base64编码的图片转换成文件形式，若失败则结束
+        if (!Base64Utils.Base64ToImage(img.getCover(), coverFileName)){
+            callback = new Callback<UserDao>(SpareData.CALL_FAILED, "系统出错");
+            response.getWriter().println(new Gson().toJson(callback));
+            return;
+        }
+        //将文件路径传入数据库中
+        response.getWriter().println(new Gson().toJson(service.updateIconById(img.getUserId(), coverFileName)));
+
+    }
+
+    //处理用户信息获取请求
+    @RequestMapping(value = "/select/id", method = RequestMethod.GET)
     public void selectUserById(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         String value = request.getParameter("userId");
         response.getWriter().println(new Gson().toJson(service.selectById(value)));
     }
 
-    @RequestMapping(value = "/select/phone", method = RequestMethod.POST)
+    //处理用户信息获取请求
+    @RequestMapping(value = "/select/phone", method = RequestMethod.GET)
     public void selectUserByPhone(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         String value = request.getParameter("value");

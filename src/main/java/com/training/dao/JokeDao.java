@@ -4,18 +4,36 @@ import java.util.Date;
 
 public class JokeDao {
 
-    private String id;
+    private String jokeId;
     private String userId;
     private String title;
     private String coverImg;
     private Date postTime;
+    private String context;
+    private String source;
 
-    public String getId() {
-        return id;
+    public String getContext() {
+        return context;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getJokeId() {
+        return jokeId;
+    }
+
+    public void setJokeId(String jokeId) {
+        this.jokeId = jokeId;
     }
 
     public String getUserId() {

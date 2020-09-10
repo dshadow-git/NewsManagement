@@ -8,6 +8,15 @@ public class UserDao {
     private String password;
     private String icon;
     private boolean type;
+    private boolean status;
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public String getUserId() {
         return userId;
