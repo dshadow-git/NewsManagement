@@ -1,10 +1,11 @@
 package com.training.service.impl;
 
 import com.training.Callback;
-import com.training.SpareData;
 import com.training.dao.UserDao;
 import com.training.mapper.UserMapper;
 import com.training.service.UserService;
+import com.training.utils.IntactUtils;
+import com.training.utils.SpareData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +20,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper mapper;
 
+    SpareData<UserDao> spare = new SpareData<>();
+
+    SpareData<List<UserDao>> spares = new SpareData<>();
+
     @Override
     public Callback<UserDao> saveByRegister(UserDao user) {
 
         //判断传入参数是否合法
-        if (user == null || !isIntact(new Object[]{user.getPhone(), user.getPassword(), user.getName()})){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传数据为空或不全");
+        if (user == null || !IntactUtils.isIntact(new Object[]{user.getPhone(), user.getPassword(), user.getName()})){
+            return new SpareData<UserDao>().failedByParameter();
         }
 
         //随机生成用户id，并判断该id是否已被用，若被用则重新生成
@@ -34,7 +39,7 @@ public class UserServiceImpl implements UserService {
         do{
             //若1000次生成id后还未成功则判断插入失败
             if (count >= 1000){
-                return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+                return spare.failedByBackstage();
             }
             count ++;
 
@@ -53,9 +58,9 @@ public class UserServiceImpl implements UserService {
 
         //再次根据id获取user实例，若为空则插入失败，不为空则插入成功
         if (mapper.selectById(id) == null){
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+            return spare.failedByBackstage();
         } else {
-            return new Callback<UserDao>(SpareData.CALL_SUCCESS);
+            return spare.successByInsert();
         }
     }
 
@@ -63,8 +68,8 @@ public class UserServiceImpl implements UserService {
     public Callback<UserDao> updateIconById(String id, String icon) {
 
         //参数判断
-        if (!isIntact(new Object[]{id, icon})){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传数据为空或不全");
+        if (!IntactUtils.isIntact(new Object[]{id, icon})){
+            return spare.failedByParameter();
         }
 
         //更改数据库数据
@@ -74,14 +79,14 @@ public class UserServiceImpl implements UserService {
         UserDao user = mapper.selectById(id);
         //如果实例为null则说明id无效错误
         if (user == null){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传参数错误");
+            return spare.failedByParameter();
         }
 
         //判断更改后的数据和传入的数据是否一样，一样则说明更改成功，否则失败
         if (user.getIcon().equals(icon)){
-            return new Callback<UserDao>(SpareData.CALL_SUCCESS);
+            return spare.successByInsert();
         } else {
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+            return spare.failedByBackstage();
         }
     }
 
@@ -89,8 +94,8 @@ public class UserServiceImpl implements UserService {
     public Callback<UserDao> updateNameById(String id, String name) {
 
         //参数合法性判断
-        if (!isIntact(new Object[]{id, name})){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传数据为空或不全");
+        if (!IntactUtils.isIntact(new Object[]{id, name})){
+            return spare.failedByParameter();
         }
 
         //更改数据库数据
@@ -100,21 +105,21 @@ public class UserServiceImpl implements UserService {
 
         //如果实例为null则说明id无效错误
         if (user == null){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传参数错误");
+            return spare.failedByParameter();
         }
         //判断更改后的数据和传入的数据是否一样，一样则说明更改成功，否则失败
         if (user.getName().equals(name)){
-            return new Callback<UserDao>(SpareData.CALL_SUCCESS);
+            return spare.successByInsert();
         } else {
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+            return spare.failedByBackstage();
         }
     }
 
     @Override
     public Callback<UserDao> updatePwdById(String id, String oldPwd, String newPwd) {
         //参数合法性判断
-        if (!isIntact(new Object[]{id, newPwd})){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传数据为空或不全");
+        if (!IntactUtils.isIntact(new Object[]{id, newPwd})){
+            return spare.failedByParameter();
         }
 
 
@@ -122,12 +127,12 @@ public class UserServiceImpl implements UserService {
 
         //判断id是否有效
         if (user == null){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传参数错误");
+            return spare.failedByParameter();
         }
 
         //比对原密码是否正确
         if (!user.getPassword().equals(oldPwd)){
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "原密码错误");
+            return spare.failedByPwd();
         }
 
         //更新密码
@@ -138,9 +143,9 @@ public class UserServiceImpl implements UserService {
 
         //判断是否更改成功
         if (user.getPassword().equals(newPwd)){
-            return new Callback<UserDao>(SpareData.CALL_SUCCESS);
+            return spare.successByInsert();
         } else {
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+            return spare.failedByBackstage();
         }
     }
 
@@ -152,9 +157,9 @@ public class UserServiceImpl implements UserService {
 
         //判断是否获取成功
         if (users != null){
-            return new Callback<List<UserDao>>(SpareData.CALL_SUCCESS, "获取成功", users);
+            return spares.successBySelect(users);
         }else {
-            return new Callback<List<UserDao>>(SpareData.CALL_FAILED, "后台出错");
+            return spares.failedByBackstage();
         }
     }
 
@@ -163,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
         //判断参数合法性
         if (id == null){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传数据为空或不全");
+            return spare.failedByParameter();
         }
 
         //获取user实例
@@ -171,9 +176,9 @@ public class UserServiceImpl implements UserService {
 
         //判断是否获取成功
         if (user != null){
-            return new Callback<UserDao>(SpareData.CALL_SUCCESS, "获取成功", user);
+            return spare.successBySelect(user);
         } else {
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+            return spare.failedByBackstage();
         }
     }
 
@@ -182,37 +187,43 @@ public class UserServiceImpl implements UserService {
 
         //判断参数合法性
         if (phone == null){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "上传数据为空或不全");
+            return spare.failedByParameter();
         }
 
         //判断是否获取成功
         UserDao user = mapper.selectByPhone(phone);
         if (user != null){
-            return new Callback<UserDao>(SpareData.CALL_SUCCESS, "获取成功", user);
+            return spare.successBySelect(user);
         } else {
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+            return spare.failedByBackstage();
         }
     }
 
     @Override
-    public Callback<UserDao> loginUser(String phone, String pwd) {
+    public Callback<UserDao> loginUser(String phone, String pwd, String status) {
 
         //判断参数合法性
-        if (!isIntact(new Object[]{phone, pwd})){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "参数缺失");
+        if (!IntactUtils.isIntact(new Object[]{phone, pwd, status})){
+            return spare.failedByParameter();
         }
 
         UserDao user = mapper.selectByPhone(phone);
 
+
         if (user == null){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "此账号不存在");
+            return spare.failedByPhone();
+        }
+
+        //比对密码
+        if (!user.getPassword().equals(pwd)){
+            return spare.failedByPwd();
         }
 
         //更改登录状态
-        if (updateStatus(user.getUserId(), "true").getCode() == SpareData.CALL_SUCCESS){
-            return new Callback<UserDao>(SpareData.CALL_SUCCESS, "登录成功");
+        if (updateStatus(user.getUserId(), status).getCode() == SpareData.CALL_SUCCESS){
+            return spare.successByLogin(Boolean.parseBoolean(status));
         } else {
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+            return spare.failedByBackstage();
         }
     }
 
@@ -221,38 +232,27 @@ public class UserServiceImpl implements UserService {
 
         //判断参数合法性
         if (id == null || status == null){
-            return new Callback<UserDao>(SpareData.CALL_PARAMETER, "参数缺失");
+            return spare.failedByParameter();
         }
 
         //判断账号是否存在，若返回实例为空则不存在否则继续
         if (mapper.selectById(id) == null){
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "此账号不存在");
+            return spare.failedByPhone();
         }
 
         //更改登录状态
         mapper.updateStatus(id, Boolean.parseBoolean(status));
 
         if (mapper.getStatus(id) == Boolean.parseBoolean(status)){
-            return new Callback<UserDao>(SpareData.CALL_SUCCESS, "更改成功");
+            return spare.successByInsert();
         } else {
-            return new Callback<UserDao>(SpareData.CALL_FAILED, "后台出错");
+            return spare.failedByBackstage();
         }
     }
 
     @Override
     public Boolean getStatus(String id) {
         return mapper.getStatus(id);
-    }
-
-    //判断所有数据是否都不为空
-    private boolean isIntact(Object[] objects){
-
-        for (Object object : objects) {
-            if (object == null) {
-                return false;
-            }
-        }
-        return true;
     }
 
 }

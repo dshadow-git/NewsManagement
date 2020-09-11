@@ -2,7 +2,7 @@ package com.training.controller;
 
 import com.google.gson.Gson;
 import com.training.Callback;
-import com.training.SpareData;
+import com.training.utils.SpareData;
 import com.training.dao.UserDao;
 import com.training.dao.CoverDao;
 import com.training.service.UserService;
@@ -49,7 +49,8 @@ public class UserController {
         //通过request对象获取客户端传来的参数
         String phone = request.getParameter("phone");
         String pwd = request.getParameter("pwd");
-        Callback<UserDao> callback = service.loginUser(phone, pwd);
+        String status = request.getParameter("status");
+        Callback<UserDao> callback = service.loginUser(phone, pwd, status);
         response.getWriter().println(new Gson().toJson(callback));
     }
 
@@ -81,13 +82,12 @@ public class UserController {
         Callback<UserDao> callback;
         //将传入的Base64编码的图片转换成文件形式，若失败则结束
         if (!Base64Utils.Base64ToImage(img.getCover(), coverFileName)){
-            callback = new Callback<UserDao>(SpareData.CALL_FAILED, "系统出错");
+            callback = new SpareData<UserDao>().failedByBackstage();
             response.getWriter().println(new Gson().toJson(callback));
             return;
         }
         //将文件路径传入数据库中
         response.getWriter().println(new Gson().toJson(service.updateIconById(img.getUserId(), coverFileName)));
-
     }
 
     //处理用户信息获取请求

@@ -2,5 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.training.mapper.JokeMapper">
 
+    <insert id="save" parameterType="com.training.dao.JokeDao">
+    insert into joke(joke_id, user_id, assort_id, title, cover_img, post_time, context, source)
+    values (#{jokeId}, #{userId}, #{assortId}, #{title}, #{coverImg}, #{postTime}, #{context}, #{source})
+    </insert>
+
+    <select id="selectAll" resultType="com.training.dao.JokeDao">
+        select * from joke
+    </select>
+
+    <select id="selectByAssortId" resultType="com.training.dao.JokeDao">
+        select * from joke where assort_id = #{assortId};
+    </select>
+
+    <select id="selectBySearch" resultType="com.training.dao.JokeDao">
+        select * from joke where title like #{search};
+    </select>
+
+    <select id="selectById" resultType="com.training.dao.JokeDao">
+        select * from joke where joke_id = #{id};
+    </select>
 
 </mapper>

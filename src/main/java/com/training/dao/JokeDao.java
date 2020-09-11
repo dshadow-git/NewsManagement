@@ -11,6 +11,15 @@ public class JokeDao {
     private Date postTime;
     private String context;
     private String source;
+    private int assortId;
+
+    public int getAssortId() {
+        return assortId;
+    }
+
+    public void setAssortId(int assortId) {
+        this.assortId = assortId;
+    }
 
     public String getContext() {
         return context;

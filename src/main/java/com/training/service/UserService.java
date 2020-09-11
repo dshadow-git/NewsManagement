@@ -65,7 +65,7 @@ public interface UserService {
      * @param pwd 用户密码
      * @return 状态码及说明
      */
-    public Callback<UserDao> loginUser(String phone, String pwd);
+    public Callback<UserDao> loginUser(String phone, String pwd, String status);
 
     /**
      * 更新用户登录状态码
