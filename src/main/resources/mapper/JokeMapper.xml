@@ -3,9 +3,17 @@
 <mapper namespace="com.training.mapper.JokeMapper">
 
     <insert id="save" parameterType="com.training.dao.JokeDao">
-    insert into joke(joke_id, user_id, assort_id, title, cover_img, post_time, context, source)
-    values (#{jokeId}, #{userId}, #{assortId}, #{title}, #{coverImg}, #{postTime}, #{context}, #{source})
+    insert into joke(joke_id, user_id, assort_id, title, post_time, context)
+    values (#{jokeId}, #{userId}, #{assortId}, #{title}, #{postTime}, #{context})
     </insert>
+
+    <update id="updateCoverById">
+    update joke set cover_img = #{param2} where joke_id = #{param1}
+    </update>
+
+    <update id="updateSourceById">
+        update joke set source = #{param2} where joke_id = #{param1}
+    </update>
 
     <select id="selectAll" resultType="com.training.dao.JokeDao">
         select * from joke

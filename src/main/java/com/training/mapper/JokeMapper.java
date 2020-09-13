@@ -16,4 +16,8 @@ public interface JokeMapper {
 
     public JokeDao selectById(String id);
 
+    public void updateCoverById(String id, String cover);
+
+    public void updateSourceById(String id, String source);
+
 }

@@ -32,6 +32,10 @@ public class UserServiceImpl implements UserService {
             return new SpareData<UserDao>().failedByParameter();
         }
 
+        if (mapper.selectByPhone(user.getPhone()) != null){
+            return spare.failedByDuplicatePhone();
+        }
+
         //随机生成用户id，并判断该id是否已被用，若被用则重新生成
         String id;
         UserDao userDao;
@@ -44,7 +48,7 @@ public class UserServiceImpl implements UserService {
             count ++;
 
             //把随机生成的整形数据格式化成字符串
-            id = 1 + String.format("%5d", new Random().nextInt(99999));
+            id = 1 + String.format("%05d", new Random().nextInt(99999));
 
             //根据获取id获取user实例，若为空则未被占用，
             userDao = mapper.selectById(id);
@@ -209,9 +213,8 @@ public class UserServiceImpl implements UserService {
 
         UserDao user = mapper.selectByPhone(phone);
 
-
         if (user == null){
-            return spare.failedByPhone();
+            return spare.failedByNoFindPhone();
         }
 
         //比对密码
@@ -221,7 +224,7 @@ public class UserServiceImpl implements UserService {
 
         //更改登录状态
         if (updateStatus(user.getUserId(), status).getCode() == SpareData.CALL_SUCCESS){
-            return spare.successByLogin(Boolean.parseBoolean(status));
+            return spare.successByLogin(Boolean.parseBoolean(status), user);
         } else {
             return spare.failedByBackstage();
         }
@@ -237,7 +240,7 @@ public class UserServiceImpl implements UserService {
 
         //判断账号是否存在，若返回实例为空则不存在否则继续
         if (mapper.selectById(id) == null){
-            return spare.failedByPhone();
+            return spare.failedByNoFindPhone();
         }
 
         //更改登录状态

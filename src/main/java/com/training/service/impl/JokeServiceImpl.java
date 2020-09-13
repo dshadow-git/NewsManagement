@@ -25,8 +25,8 @@ public class JokeServiceImpl implements JokeService {
     @Override
     public Callback<JokeDao> saveJoke(JokeDao joke) {
 
-        if (joke == null || !IntactUtils.isIntact(new Object[]{joke.getContext(), joke.getPostTime(), joke.getSource(),
-        joke.getUserId(), joke.getAssortId()})){
+        if (joke == null || !IntactUtils.isIntact(new Object[]{joke.getContext(), joke.getPostTime(),
+                joke.getUserId(), joke.getAssortId()})){
             return spare.failedByParameter();
         }
 
@@ -42,7 +42,7 @@ public class JokeServiceImpl implements JokeService {
             count ++;
 
             //把随机生成的整形数据格式化成字符串
-            id = 1 + String.format("%6d", new Random().nextInt(99999));
+            id = 1 + String.format("%06d", new Random().nextInt(99999));
 
             //根据获取id获取joke实例，若为空则未被占用，
             jokeDao = mapper.selectById(id);
@@ -54,6 +54,15 @@ public class JokeServiceImpl implements JokeService {
         if (mapper.selectById(joke.getJokeId()) == null){
             return spare.failedByBackstage();
         } else {
+            //判断上传的数据中cover和source是否为空，若不为空则保存到数据库中
+            if (joke.getJokeId() != null){
+                mapper.updateCoverById(joke.getJokeId(), joke.getCoverImg());
+            }
+
+            if (joke.getSource() != null){
+                mapper.updateSourceById(joke.getJokeId(), joke.getSource());
+            }
+
             return spare.successByInsert();
         }
     }

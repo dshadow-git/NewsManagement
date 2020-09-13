@@ -10,6 +10,26 @@ public class SpareData<T> {
     public static final int CALL_FAILED = 1002;      //失败
     public static final int CALL_PARAMETER = 1003;   //参数不全
 
+    public Callback<T> failed(){
+        return new Callback<T>(CALL_FAILED);
+    }
+
+    public Callback<T> failed(String msg){
+        return new Callback<T>(CALL_FAILED, msg);
+    }
+
+    public Callback<T> success(){
+        return new Callback<T>(CALL_SUCCESS);
+    }
+
+    public Callback<T> success(String msg, T data){
+        return new Callback<T>(CALL_SUCCESS, msg, data);
+    }
+
+    public Callback<T> success(String msg){
+        return new Callback<T>(CALL_SUCCESS, msg);
+    }
+
     public Callback<T> failedByParameter(){
         return new Callback<T>(CALL_PARAMETER, "上传数据不全或错误");
     }
@@ -22,13 +42,17 @@ public class SpareData<T> {
         return new Callback<T>(CALL_FAILED, "密码错误");
     }
 
-    public Callback<T> failedByPhone(){
+    public Callback<T> failedByNoFindPhone(){
         return new Callback<T>(CALL_FAILED, "账号不存在");
     }
 
-    public Callback<T> successByLogin(boolean status){
+    public Callback<T> failedByDuplicatePhone() {
+        return new Callback<T>(CALL_FAILED, "该账号已被注册存在");
+    }
+
+    public Callback<T> successByLogin(boolean status, T data){
         if (status){
-            return new Callback<T>(CALL_SUCCESS, "登录成功");
+            return new Callback<T>(CALL_SUCCESS, "登录成功", data);
         }
         return new Callback<T>(CALL_SUCCESS, "退出登录成功");
     }
