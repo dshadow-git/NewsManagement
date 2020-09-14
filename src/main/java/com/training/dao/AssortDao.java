@@ -2,14 +2,14 @@ package com.training.dao;
 
 public class AssortDao {
 
-    String assortId;
+    int assortId;
     String assortName;
 
-    public String getAssortId() {
+    public int getAssortId() {
         return assortId;
     }
 
-    public void setAssortId(String assortId) {
+    public void setAssortId(int assortId) {
         this.assortId = assortId;
     }
 

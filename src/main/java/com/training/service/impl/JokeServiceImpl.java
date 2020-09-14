@@ -25,7 +25,7 @@ public class JokeServiceImpl implements JokeService {
     @Override
     public Callback<JokeDao> saveJoke(JokeDao joke) {
 
-        if (joke == null || !IntactUtils.isIntact(new Object[]{joke.getContext(), joke.getPostTime(),
+        if (joke == null || !IntactUtils.isIntact(new Object[]{joke.getContent(), joke.getPostTime(),
                 joke.getUserId(), joke.getAssortId()})){
             return spare.failedByParameter();
         }

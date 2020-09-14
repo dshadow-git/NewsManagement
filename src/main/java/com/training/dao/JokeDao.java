@@ -9,7 +9,7 @@ public class JokeDao {
     private String title;
     private String coverImg;
     private Date postTime;
-    private String context;
+    private String content;
     private String source;
     private int assortId;
 
@@ -21,12 +21,12 @@ public class JokeDao {
         this.assortId = assortId;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getSource() {
