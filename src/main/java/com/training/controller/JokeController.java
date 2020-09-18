@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Random;
 
 @Controller
 @RequestMapping(value = "/joke")
@@ -65,7 +64,7 @@ public class JokeController {
 
         String url = request.getSession().getServletContext().getRealPath("/img");
 
-        String filePath ="/joke/" + joke.getUserId() + "_" + String.format("%04s", new Random().nextInt(9999)) + file.getOriginalFilename();//保存图
+        String filePath ="/joke/" + joke.getUserId() + "_" + file.getOriginalFilename();//保存图
         file.transferTo(new File(url + filePath));
         joke.setCoverImg("img" + filePath);
         response.getWriter().println(new Gson().toJson(service.saveJoke(joke)));

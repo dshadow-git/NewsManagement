@@ -3,8 +3,8 @@
 <mapper namespace="com.training.mapper.JokeMapper">
 
     <insert id="save" parameterType="com.training.bean.JokeBean">
-    insert into joke(joke_id, user_id, assort_id, title, post_time, context)
-    values (#{jokeId}, #{userId}, #{assortId}, #{title}, #{postTime}, #{context})
+    insert into joke(joke_id, user_id, assort_id, title, post_time, content)
+    values (#{jokeId}, #{userId}, #{assortId}, #{title}, #{postTime}, #{content})
     </insert>
 
     <update id="updateCoverById">
@@ -20,11 +20,11 @@
     </delete>
 
     <select id="selectAll" resultType="com.training.bean.JokeBean">
-        select * from joke group by post_time
+        select * from joke order by post_time desc
     </select>
 
     <select id="selectByAssortId" resultType="com.training.bean.JokeBean">
-        select * from joke where assort_id = #{assortId} group by post_time;
+        select * from joke where assort_id = #{assortId} order by post_time desc;
     </select>
 
     <select id="selectBySearch" resultType="com.training.bean.JokeBean">
