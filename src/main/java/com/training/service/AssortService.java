@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface AssortService {
 
+    //获取所有分类数据接口
     public Callback<List<AssortBean>> selectAssortAll();
 }

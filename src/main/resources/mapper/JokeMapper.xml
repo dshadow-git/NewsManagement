@@ -20,11 +20,11 @@
     </delete>
 
     <select id="selectAll" resultType="com.training.bean.JokeBean">
-        select * from joke
+        select * from joke group by post_time
     </select>
 
     <select id="selectByAssortId" resultType="com.training.bean.JokeBean">
-        select * from joke where assort_id = #{assortId};
+        select * from joke where assort_id = #{assortId} group by post_time;
     </select>
 
     <select id="selectBySearch" resultType="com.training.bean.JokeBean">

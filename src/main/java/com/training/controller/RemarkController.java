@@ -2,6 +2,8 @@ package com.training.controller;
 
 import com.google.gson.Gson;
 import com.training.bean.RemarkBean;
+import com.training.service.RemarkService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,19 +17,22 @@ import java.io.IOException;
 @RequestMapping(value = "/remark")
 public class RemarkController {
 
+    @Autowired
+    RemarkService service;
+
     @RequestMapping(value = "/upload")
     @ResponseBody
     public void saveRemark(@RequestBody RemarkBean remark, HttpServletResponse response) throws IOException {
         response.setContentType("text/html, charset=utf-8");
 
-        response.getWriter().println(new Gson().toJson("暂无数据"));
+        response.getWriter().println(new Gson().toJson(service.saveRemark(remark)));
     }
 
     @RequestMapping(value = "/delete")
     public void deleteRemark(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html, charset=utf-8");
-
-        response.getWriter().println(new Gson().toJson("暂无数据"));
+        String id = request.getParameter("id");
+        response.getWriter().println(new Gson().toJson(service.deleteById(id)));
     }
 
 }

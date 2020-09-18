@@ -14,4 +14,12 @@
 
     </select>
 
+    <select id="selectCountByJokeId" resultType="java.lang.Integer">
+        select count(*) from remark where joke_id = #{jokeId}
+    </select>
+
+    <select id="selectById" resultType="com.training.bean.RemarkBean">
+
+    </select>
+
 </mapper>
