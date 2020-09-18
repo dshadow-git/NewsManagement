@@ -7,9 +7,11 @@ import com.training.service.RemarkService;
 import com.training.utils.IntactUtils;
 import com.training.utils.SpareData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class RemarkServiceImpl implements RemarkService {
 
     @Autowired
