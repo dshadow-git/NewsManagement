@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.training.mapper.JokeMapper">
 
-    <insert id="save" parameterType="com.training.dao.JokeDao">
+    <insert id="save" parameterType="com.training.bean.JokeBean">
     insert into joke(joke_id, user_id, assort_id, title, post_time, context)
     values (#{jokeId}, #{userId}, #{assortId}, #{title}, #{postTime}, #{context})
     </insert>
@@ -15,19 +15,23 @@
         update joke set source = #{param2} where joke_id = #{param1}
     </update>
 
-    <select id="selectAll" resultType="com.training.dao.JokeDao">
+    <delete id="deleteById">
+        delete from joke where joke_id = #{jokeId}
+    </delete>
+
+    <select id="selectAll" resultType="com.training.bean.JokeBean">
         select * from joke
     </select>
 
-    <select id="selectByAssortId" resultType="com.training.dao.JokeDao">
+    <select id="selectByAssortId" resultType="com.training.bean.JokeBean">
         select * from joke where assort_id = #{assortId};
     </select>
 
-    <select id="selectBySearch" resultType="com.training.dao.JokeDao">
+    <select id="selectBySearch" resultType="com.training.bean.JokeBean">
         select * from joke where title like #{search};
     </select>
 
-    <select id="selectById" resultType="com.training.dao.JokeDao">
+    <select id="selectById" resultType="com.training.bean.JokeBean">
         select * from joke where joke_id = #{id};
     </select>
 

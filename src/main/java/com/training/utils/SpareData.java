@@ -50,6 +50,10 @@ public class SpareData<T> {
         return new Callback<T>(CALL_FAILED, "该账号已被注册存在");
     }
 
+    public Callback<T> failedByJurisdiction(){
+        return new Callback<T>(CALL_PARAMETER, "你暂无权限执行该操作");
+    }
+
     public Callback<T> successByLogin(boolean status, T data){
         if (status){
             return new Callback<T>(CALL_SUCCESS, "登录成功", data);
@@ -58,10 +62,11 @@ public class SpareData<T> {
     }
 
     public Callback<T> successByInsert(){
-        return new Callback<T>(CALL_SUCCESS, "上传成功");
+        return new Callback<T>(CALL_SUCCESS, "操作成功");
     }
 
     public Callback<T> successBySelect(T data){
         return new Callback<T>(CALL_SUCCESS, "获取成功", data);
     }
+
 }

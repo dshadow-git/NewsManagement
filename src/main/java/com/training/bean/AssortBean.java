@@ -1,6 +1,6 @@
-package com.training.dao;
+package com.training.bean;
 
-public class AssortDao {
+public class AssortBean {
 
     int assortId;
     String assortName;

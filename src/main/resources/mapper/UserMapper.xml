@@ -2,9 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.training.mapper.UserMapper">
 
-    <insert id="saveByRegister" parameterType="com.training.dao.UserDao">
+    <insert id="saveByRegister" parameterType="com.training.bean.UserBean">
         insert into user(user_id, phone, name, password)
         values (#{userId}, #{phone}, #{name}, #{password})
+    </insert>
+
+    <insert id="saveCollection">
+        insert into collection(user_id, joke_id)
+        values (#{param1}, #{param2});
+
     </insert>
 
     <update id="updateIconById">
@@ -24,20 +30,24 @@
 
     </update>
 
-    <select id="selectAll" resultType="com.training.dao.UserDao">
+    <select id="selectAll" resultType="com.training.bean.UserBean">
         select * from user
     </select>
 
-    <select id="selectById" resultType="com.training.dao.UserDao">
+    <select id="selectById" resultType="com.training.bean.UserBean">
         select * from user where user_id = #{id}
     </select>
 
-    <select id="selectByPhone" resultType="com.training.dao.UserDao">
+    <select id="selectByPhone" resultType="com.training.bean.UserBean">
         select * from user where phone = #{phone}
     </select>
 
     <select id="getStatus" resultType="java.lang.Boolean">
         select status from user where user_id = #{id};
+    </select>
+
+    <select id="selectCollectionIdByUserId" resultType="java.lang.String">
+        select joke_id from collection where user_id = #{userId}
     </select>
 
 

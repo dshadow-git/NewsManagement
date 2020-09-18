@@ -1,11 +1,11 @@
 package com.training.mapper;
 
-import com.training.dao.AssortDao;
+import com.training.bean.AssortBean;
 
 import java.util.List;
 
 public interface AssortMapper {
 
-    public List<AssortDao> selectAll();
+    public List<AssortBean> selectAll();
 
 }

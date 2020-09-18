@@ -1,14 +1,14 @@
-package com.training.dao;
+package com.training.bean;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
-public class JokeDao {
+public class JokeBean {
 
     private String jokeId;
     private String userId;
     private String title;
     private String coverImg;
-    private Date postTime;
+    private Timestamp postTime;
     private String content;
     private String source;
     private int assortId;
@@ -17,24 +17,12 @@ public class JokeDao {
         return assortId;
     }
 
-    public void setAssortId(int assortId) {
-        this.assortId = assortId;
-    }
-
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getSource() {
         return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 
     public String getJokeId() {
@@ -49,18 +37,6 @@ public class JokeDao {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getCoverImg() {
         return coverImg;
     }
@@ -69,11 +45,7 @@ public class JokeDao {
         this.coverImg = coverImg;
     }
 
-    public Date getPostTime() {
+    public Timestamp getPostTime() {
         return postTime;
-    }
-
-    public void setPostTime(Date postTime) {
-        this.postTime = postTime;
     }
 }

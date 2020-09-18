@@ -1,11 +1,14 @@
 package com.training.service.impl;
 
 import com.training.Callback;
-import com.training.dao.JokeDao;
+import com.training.bean.JokeBean;
+import com.training.bean.UserBean;
 import com.training.mapper.JokeMapper;
+import com.training.mapper.UserMapper;
 import com.training.service.JokeService;
 import com.training.utils.IntactUtils;
 import com.training.utils.SpareData;
+import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,21 +21,24 @@ public class JokeServiceImpl implements JokeService {
     @Autowired
     JokeMapper mapper;
 
-    SpareData<JokeDao> spare = new SpareData<>();
+    @Autowired
+    UserMapper userMapper;
 
-    SpareData<List<JokeDao>> spares = new SpareData<>();
+    SpareData<JokeBean> spare = new SpareData<>();
+
+    SpareData<List<JokeBean>> spares = new SpareData<>();
 
     @Override
-    public Callback<JokeDao> saveJoke(JokeDao joke) {
+    public Callback<JokeBean> saveJoke(JokeBean joke) {
 
-        if (joke == null || !IntactUtils.isIntact(new Object[]{joke.getContent(), joke.getPostTime(),
-                joke.getUserId(), joke.getAssortId()})){
+        if (joke == null || !IntactUtils.isIntact(joke.getContent(), joke.getPostTime(),
+                joke.getUserId(), joke.getAssortId())){
             return spare.failedByParameter();
         }
 
         //随机生成用户id，并判断该id是否已被用，若被用则重新生成
         String id;
-        JokeDao jokeDao;
+        JokeBean jokeBean;
         int count = 0;
         do{
             //若1000次生成id后还未成功则判断插入失败
@@ -45,8 +51,8 @@ public class JokeServiceImpl implements JokeService {
             id = 1 + String.format("%06d", new Random().nextInt(99999));
 
             //根据获取id获取joke实例，若为空则未被占用，
-            jokeDao = mapper.selectById(id);
-        }while (jokeDao != null);
+            jokeBean = mapper.selectById(id);
+        }while (jokeBean != null);
 
         joke.setJokeId(id);
 
@@ -68,7 +74,7 @@ public class JokeServiceImpl implements JokeService {
     }
 
     @Override
-    public Callback<List<JokeDao>> selectJokeByAssort(String assortId) {
+    public Callback<List<JokeBean>> selectJokeByAssort(String assortId) {
 
         if (assortId == null){
             return spares.failedByParameter();
@@ -76,7 +82,7 @@ public class JokeServiceImpl implements JokeService {
 
         int aId = Integer.parseInt(assortId);
 
-        List<JokeDao> jokes;
+        List<JokeBean> jokes;
 
         if (aId == 0){
             jokes = mapper.selectAll();
@@ -91,16 +97,42 @@ public class JokeServiceImpl implements JokeService {
     }
 
     @Override
-    public Callback<List<JokeDao>> selectJokeBySearch(String search) {
+    public Callback<List<JokeBean>> selectJokeBySearch(String search) {
         if (search == null){
             return spares.failedByParameter();
         }
 
-        List<JokeDao> jokes;
+        List<JokeBean> jokes;
         jokes = mapper.selectBySearch("%" + search + "%");
         if (jokes == null){
             return spares.failedByBackstage();
         }
         return spares.successBySelect(jokes);
+    }
+
+    @Override
+    public Callback<JokeBean> deleteJokeById(String userId, String jokeId) {
+        if (!IntactUtils.isIntact(userId, jokeId)){
+            return spare.failedByParameter();
+        }
+
+        UserBean userBean = userMapper.selectById(userId);
+        JokeBean jokeBean = mapper.selectById(jokeId);
+
+        if (!IntactUtils.isIntact(userBean, jokeBean)){
+            return spare.failedByParameter();
+        }
+
+        if (!userBean.isType() && !jokeBean.getUserId().equals(userId)){
+            return spare.failedByJurisdiction();
+        }
+
+        try {
+            mapper.deleteById(jokeId);
+        }catch (SqlSessionException e){
+            e.printStackTrace();
+            return spare.failed(e.getMessage());
+        }
+        return spare.successByInsert();
     }
 }

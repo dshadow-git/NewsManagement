@@ -1,14 +1,16 @@
 package com.training.service.impl;
 
 import com.training.Callback;
-import com.training.dao.UserDao;
+import com.training.bean.UserBean;
 import com.training.mapper.UserMapper;
 import com.training.service.UserService;
 import com.training.utils.IntactUtils;
 import com.training.utils.SpareData;
+import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Random;
 
@@ -20,16 +22,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper mapper;
 
-    SpareData<UserDao> spare = new SpareData<>();
+    SpareData<UserBean> spare = new SpareData<>();
 
-    SpareData<List<UserDao>> spares = new SpareData<>();
+    SpareData<List<UserBean>> spares = new SpareData<>();
 
     @Override
-    public Callback<UserDao> saveByRegister(UserDao user) {
+    public Callback<UserBean> saveByRegister(UserBean user) {
 
         //判断传入参数是否合法
-        if (user == null || !IntactUtils.isIntact(new Object[]{user.getPhone(), user.getPassword(), user.getName()})){
-            return new SpareData<UserDao>().failedByParameter();
+        if (user == null || !IntactUtils.isIntact(user.getPhone(), user.getPassword(), user.getName())){
+            return new SpareData<UserBean>().failedByParameter();
         }
 
         if (mapper.selectByPhone(user.getPhone()) != null){
@@ -38,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
         //随机生成用户id，并判断该id是否已被用，若被用则重新生成
         String id;
-        UserDao userDao;
+        UserBean userDao;
         int count = 0;
         do{
             //若1000次生成id后还未成功则判断插入失败
@@ -69,10 +71,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Callback<UserDao> updateIconById(String id, String icon) {
+    public Callback<UserBean> updateIconById(String id, String icon) {
 
         //参数判断
-        if (!IntactUtils.isIntact(new Object[]{id, icon})){
+        if (!IntactUtils.isIntact(id, icon)){
             return spare.failedByParameter();
         }
 
@@ -80,7 +82,7 @@ public class UserServiceImpl implements UserService {
         mapper.updateIconById(id, icon);
 
         //根据用户id获取user实例
-        UserDao user = mapper.selectById(id);
+        UserBean user = mapper.selectById(id);
         //如果实例为null则说明id无效错误
         if (user == null){
             return spare.failedByParameter();
@@ -95,17 +97,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Callback<UserDao> updateNameById(String id, String name) {
+    public Callback<UserBean> updateNameById(String id, String name) {
 
         //参数合法性判断
-        if (!IntactUtils.isIntact(new Object[]{id, name})){
+        if (!IntactUtils.isIntact(id, name)){
             return spare.failedByParameter();
         }
 
         //更改数据库数据
         mapper.updateNameById(id, name);
 
-        UserDao user = mapper.selectById(id);
+        UserBean user = mapper.selectById(id);
 
         //如果实例为null则说明id无效错误
         if (user == null){
@@ -120,14 +122,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Callback<UserDao> updatePwdById(String id, String oldPwd, String newPwd) {
+    public Callback<UserBean> updatePwdById(String id, String oldPwd, String newPwd) {
         //参数合法性判断
-        if (!IntactUtils.isIntact(new Object[]{id, newPwd})){
+        if (!IntactUtils.isIntact(id, newPwd)){
             return spare.failedByParameter();
         }
 
 
-        UserDao user = mapper.selectById(id);
+        UserBean user = mapper.selectById(id);
 
         //判断id是否有效
         if (user == null){
@@ -154,10 +156,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Callback<List<UserDao>> selectAll() {
+    public Callback<List<UserBean>> selectAll() {
 
         //直接获取所有用户信息
-        List<UserDao> users = mapper.selectAll();
+        List<UserBean> users = mapper.selectAll();
 
         //判断是否获取成功
         if (users != null){
@@ -168,15 +170,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Callback<UserDao> selectById(String id) {
+    public Callback<UserBean> selectById(String id) {
 
         //判断参数合法性
         if (id == null){
             return spare.failedByParameter();
         }
-
+        UserBean user = null;
         //获取user实例
-        UserDao user = mapper.selectById(id);
+        try {
+            user = mapper.selectById(id);
+        }catch (SqlSessionException | PersistenceException e){
+            return spare.failed(e.getMessage());
+        }
 
         //判断是否获取成功
         if (user != null){
@@ -187,7 +193,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Callback<UserDao> selectByPhone(String phone) {
+    public Callback<UserBean> selectByPhone(String phone) {
 
         //判断参数合法性
         if (phone == null){
@@ -195,7 +201,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //判断是否获取成功
-        UserDao user = mapper.selectByPhone(phone);
+        UserBean user = mapper.selectByPhone(phone);
         if (user != null){
             return spare.successBySelect(user);
         } else {
@@ -204,14 +210,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Callback<UserDao> loginUser(String phone, String pwd, String status) {
+    public Callback<UserBean> loginUser(String phone, String pwd, String status) {
 
         //判断参数合法性
-        if (!IntactUtils.isIntact(new Object[]{phone, pwd, status})){
+        if (!IntactUtils.isIntact(phone, pwd, status)){
             return spare.failedByParameter();
         }
 
-        UserDao user = mapper.selectByPhone(phone);
+        UserBean user = mapper.selectByPhone(phone);
 
         if (user == null){
             return spare.failedByNoFindPhone();
@@ -231,7 +237,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Callback<UserDao> updateStatus(String id, String status) {
+    public Callback<UserBean> updateStatus(String id, String status) {
 
         //判断参数合法性
         if (id == null || status == null){

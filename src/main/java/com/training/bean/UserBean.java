@@ -1,6 +1,6 @@
-package com.training.dao;
+package com.training.bean;
 
-public class UserDao {
+public class UserBean {
 
     private String userId;
     private String phone;

@@ -2,7 +2,7 @@ package com.training.controller;
 
 import com.google.gson.Gson;
 import com.training.Callback;
-import com.training.dao.UserDao;
+import com.training.bean.UserBean;
 import com.training.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,12 +25,12 @@ public class UserController {
     //处理登录请求
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public void saveRegisterUser(@RequestBody UserDao user, HttpServletResponse response) throws IOException {
+    public void saveRegisterUser(@RequestBody UserBean user, HttpServletResponse response) throws IOException {
         //设置传输数据的编码形式
         response.setContentType("text/html;charset=utf-8");
 
         //注册账号并获取状态实例
-        Callback<UserDao> callback = service.saveByRegister(user);
+        Callback<UserBean> callback = service.saveByRegister(user);
 
         //将Callback实例通过Gson工具转换成json数据
         String jsonString = new Gson().toJson(callback);
@@ -47,7 +47,7 @@ public class UserController {
         String phone = request.getParameter("phone");
         String pwd = request.getParameter("pwd");
         String status = request.getParameter("status");
-        Callback<UserDao> callback = service.loginUser(phone, pwd, status);
+        Callback<UserBean> callback = service.loginUser(phone, pwd, status);
         response.getWriter().println(new Gson().toJson(callback));
     }
 
@@ -83,13 +83,13 @@ public class UserController {
     public void selectUserByPhone(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         String value = request.getParameter("value");
-        Callback<UserDao> callback;
+        Callback<UserBean> callback;
         callback = service.selectByPhone(value);
         response.getWriter().println(new Gson().toJson(callback));
     }
 
     //处理头像更改请求
-    @RequestMapping(value = "/update/cover", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/update/cover", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public void imageUphold(@RequestParam("cover") MultipartFile file, String userId, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=utf-8");

@@ -9,7 +9,7 @@
     </settings>
 
     <typeAliases>
-        <package name="com.training.dao"/>
+        <package name="com.training.bean"/>
     </typeAliases>
 
 </configuration>

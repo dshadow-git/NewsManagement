@@ -1,11 +1,11 @@
 package com.training.service;
 
 import com.training.Callback;
-import com.training.dao.AssortDao;
+import com.training.bean.AssortBean;
 
 import java.util.List;
 
 public interface AssortService {
 
-    public Callback<List<AssortDao>> selectAssortAll();
+    public Callback<List<AssortBean>> selectAssortAll();
 }

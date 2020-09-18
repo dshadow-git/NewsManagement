@@ -1,13 +1,13 @@
 package com.training.mapper;
 
-import com.training.dao.UserDao;
+import com.training.bean.UserBean;
 
 import java.util.List;
 
 public interface UserMapper {
 
     //注册添加用户(type和icon采用默认值)
-    public void saveByRegister(UserDao user);
+    public void saveByRegister(UserBean user);
 
     //根据用户id修改用户头像地址
     public void updateIconById(String id, String icon);
@@ -19,18 +19,24 @@ public interface UserMapper {
     public void updatePwdById(String id, String pwd);
 
     //获取所用用户信息
-    public List<UserDao> selectAll();
+    public List<UserBean> selectAll();
 
     //根据用户id获取用户数据
-    public UserDao selectById(String id);
+    public UserBean selectById(String id);
 
     //根据用户电话号码获取用户数据
-    public UserDao selectByPhone(String phone);
+    public UserBean selectByPhone(String phone);
 
     //根据用户id设置登录状态
     public void updateStatus(String id, boolean status);
 
     //根据用户id获取用户登录状态
     public Boolean getStatus(String id);
+
+    //新增用户收藏的新闻
+    public void saveCollection(String userId, String jokeId);
+
+    //根据用户id获取收藏id
+    public List<String> selectCollectionIdByUserId(String userId);
 
 }
