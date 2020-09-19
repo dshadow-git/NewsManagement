@@ -98,4 +98,21 @@ public class UserController {
         file.transferTo(new File(url + filePath));
         response.getWriter().println(new Gson().toJson(service.updateIconById(userId, "img" + filePath)));
     }
+
+    @RequestMapping(value = "/upload/collection")
+    public void saveCollection(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        response.setContentType("text/html;charset=utf-8");
+        String userId = request.getParameter("userId");
+        String jokeId = request.getParameter("jokeId");
+        response.getWriter().println(new Gson().toJson(service.saveCollection(userId, jokeId)));
+    }
+
+    @RequestMapping(value = "/delete/collection")
+    public void selectCollection(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        response.setContentType("text/html;charset=utf-8");
+        String userId = request.getParameter("userId");
+        String jokeId = request.getParameter("JokeId");
+        response.getWriter().println(new Gson().toJson(service.deleteCollection(userId, jokeId)));
+    }
+
 }

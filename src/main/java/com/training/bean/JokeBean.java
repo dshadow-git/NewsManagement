@@ -1,6 +1,7 @@
 package com.training.bean;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class JokeBean {
 
@@ -12,6 +13,7 @@ public class JokeBean {
     private String content;
     private String source;
     private int assortId;
+    private List<RemarkBean> remarks;
 
     public JokeBean(String userId, String title, Timestamp postTime, String content, String source, int assortId) {
         this.userId = userId;
@@ -23,6 +25,14 @@ public class JokeBean {
     }
 
     public JokeBean() {
+    }
+
+    public List<RemarkBean> getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(List<RemarkBean> remarks) {
+        this.remarks = remarks;
     }
 
     public int getAssortId() {

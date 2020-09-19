@@ -49,7 +49,19 @@ public class RemarkServiceImpl implements RemarkService {
     }
 
     @Override
-    public Callback<RemarkBean> deleteById(String id) {
-        return null;
+    public Callback<RemarkBean> deleteById(String id, String userId) {
+
+        if (!IntactUtils.isIntact(id, userId)){
+            return spare.failedByParameter();
+        }
+
+        RemarkBean remark = mapper.selectById(id);
+        if (remark == null || (!remark.getUserId().equals(userId) && !remark.getJokeId().equals(userId))){
+            return spare.failedByParameter();
+        }
+
+        mapper.deleteById(id);
+
+        return spare.successByInsert();
     }
 }

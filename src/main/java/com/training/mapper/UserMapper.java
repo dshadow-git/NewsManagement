@@ -33,10 +33,4 @@ public interface UserMapper {
     //根据用户id获取用户登录状态
     public Boolean getStatus(String id);
 
-    //新增用户收藏的新闻
-    public void saveCollection(String userId, String jokeId);
-
-    //根据用户id获取收藏id
-    public List<String> selectCollectionIdByUserId(String userId);
-
 }

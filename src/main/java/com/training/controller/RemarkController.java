@@ -32,7 +32,8 @@ public class RemarkController {
     public void deleteRemark(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html, charset=utf-8");
         String id = request.getParameter("id");
-        response.getWriter().println(new Gson().toJson(service.deleteById(id)));
+        String userId = request.getParameter("userId");
+        response.getWriter().println(new Gson().toJson(service.deleteById(id, userId)));
     }
 
 }

@@ -50,6 +50,10 @@ public class SpareData<T> {
         return new Callback<T>(CALL_FAILED, "该账号已被注册存在");
     }
 
+    public Callback<T> failedByDuplicateData() {
+        return new Callback<T>(CALL_FAILED, "该数据已存在");
+    }
+
     public Callback<T> failedByJurisdiction(){
         return new Callback<T>(CALL_PARAMETER, "你暂无权限执行该操作");
     }

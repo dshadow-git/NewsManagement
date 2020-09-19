@@ -20,6 +20,8 @@ public interface JokeMapper {
 
     public void updateSourceById(String id, String source);
 
-    //删除新闻连接数据库接口
+    //删除新闻
     void deleteById(String jokeId);
+
+    public List<JokeBean> selectByCollectionUserId(String userId);
 }

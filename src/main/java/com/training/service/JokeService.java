@@ -16,4 +16,9 @@ public interface JokeService {
     //删除service新闻接口
     Callback<JokeBean> deleteJokeById(String userId, String jokeId);
 
+    //根据新闻id获取新闻，需附带评论数据
+    Callback<JokeBean> selectJokeById(String id);
+
+    Callback<List<JokeBean>> selectJokeByCollection(String userId);
+
 }

@@ -82,4 +82,10 @@ public interface UserService {
      */
     public Boolean getStatus(String id);
 
+    /** 添加用户收藏新闻 */
+    Callback<UserBean> saveCollection(String userId, String jokeId);
+
+    /** 取消用户收藏 */
+    Callback<UserBean> deleteCollection(String userId, String jokeId);
+
 }

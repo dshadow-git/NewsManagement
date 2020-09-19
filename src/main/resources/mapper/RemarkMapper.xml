@@ -3,15 +3,16 @@
 <mapper namespace="com.training.mapper.RemarkMapper">
 
     <insert id="save" parameterType="com.training.bean.RemarkBean">
-
+        insert into remark(remark_id, user_id, joke_id, content, post_time)
+        values (#{remarkId}, #{userId}, #{jokeId}, #{content}, post_time)
     </insert>
 
     <delete id="deleteById">
-
+        delete from remark where remark_id = #{id}
     </delete>
 
     <select id="selectByJokeId" resultType="com.training.bean.RemarkBean">
-
+        select * from remark where joke_id = #{jokeId} order by post_time desc
     </select>
 
     <select id="selectCountByJokeId" resultType="java.lang.Integer">
@@ -19,7 +20,7 @@
     </select>
 
     <select id="selectById" resultType="com.training.bean.RemarkBean">
-
+        select * from remark where remark_id = #{id}
     </select>
 
 </mapper>

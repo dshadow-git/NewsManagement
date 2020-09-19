@@ -14,6 +14,6 @@ public interface RemarkService {
     Callback<List<RemarkBean>> selectByJokeId(String jokeId);
 
     //根据评论id删除评论
-    Callback<RemarkBean> deleteById(String id);
+    Callback<RemarkBean> deleteById(String id, String userId);
 
 }

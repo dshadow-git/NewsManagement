@@ -2,6 +2,8 @@ package com.training.service.impl;
 
 import com.training.Callback;
 import com.training.bean.UserBean;
+import com.training.mapper.CollectionMapper;
+import com.training.mapper.JokeMapper;
 import com.training.mapper.UserMapper;
 import com.training.service.UserService;
 import com.training.utils.IntactUtils;
@@ -21,6 +23,12 @@ public class UserServiceImpl implements UserService {
     //Autowired注解，获取UserMapper类实例
     @Autowired
     UserMapper mapper;
+
+    @Autowired
+    CollectionMapper collectionMapper;
+
+    @Autowired
+    JokeMapper jokeMapper;
 
     SpareData<UserBean> spare = new SpareData<>();
 
@@ -262,6 +270,34 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean getStatus(String id) {
         return mapper.getStatus(id);
+    }
+
+    @Override
+    public Callback<UserBean> saveCollection(String userId, String jokeId) {
+
+        if (!IntactUtils.isIntact(userId, jokeId) || mapper.selectById(userId) == null || jokeMapper.selectById(jokeId) == null){
+            return spare.failedByParameter();
+        }
+
+        if (collectionMapper.selectByUserIdJokeId(userId, jokeId) != null){
+            return spare.failedByDuplicateData();
+        }
+
+        collectionMapper.save(userId, jokeId);
+
+        return spare.successByInsert();
+    }
+
+    @Override
+    public Callback<UserBean> deleteCollection(String userId, String jokeId) {
+
+        if (!IntactUtils.isIntact(userId, jokeId)){
+            return spare.failedByParameter();
+        }
+
+        collectionMapper.delete(userId, jokeId);
+
+        return spare.successByInsert();
     }
 
 }

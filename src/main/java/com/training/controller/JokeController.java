@@ -36,11 +36,18 @@ public class JokeController {
         response.getWriter().println(new Gson().toJson(assortService.selectAssortAll()));
     }
 
-    @RequestMapping(value = "/select", method = RequestMethod.GET)
+    @RequestMapping(value = "/select/all", method = RequestMethod.GET)
     public void selectByAssort(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         String assort = request.getParameter("assort");
         response.getWriter().println(new Gson().toJson(service.selectJokeByAssort(assort)));
+    }
+
+    @RequestMapping(value = "/select/id", method = RequestMethod.GET)
+    public void selectById(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        response.setContentType("text/html;charset=utf-8");
+        String id = request.getParameter("jokeId");
+        response.getWriter().println(new Gson().toJson(service.selectJokeById(id)));
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
@@ -80,8 +87,17 @@ public class JokeController {
     //删除新闻
     @RequestMapping(value = "/delete")
     public void deleteJoke(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        response.setContentType("text/html;charset=utf-8");
         String jokeId = request.getParameter("jokeId");
         String userId = request.getParameter("userId");
         response.getWriter().println(new Gson().toJson(service.deleteJokeById(userId, jokeId)));
+    }
+
+    //获取用户收藏新闻列表
+    @RequestMapping(value = "select/collection")
+    public void selectCollection(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        response.setContentType("text/html;charset=utf-8");
+        String userId = request.getParameter("userId");
+        response.getWriter().println(new Gson().toJson(service.selectJokeByCollection(userId)));
     }
 }

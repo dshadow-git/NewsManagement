@@ -2,8 +2,10 @@ package com.training.service.impl;
 
 import com.training.Callback;
 import com.training.bean.JokeBean;
+import com.training.bean.RemarkBean;
 import com.training.bean.UserBean;
 import com.training.mapper.JokeMapper;
+import com.training.mapper.RemarkMapper;
 import com.training.mapper.UserMapper;
 import com.training.service.JokeService;
 import com.training.utils.IntactUtils;
@@ -12,6 +14,7 @@ import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +26,9 @@ public class JokeServiceImpl implements JokeService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    RemarkMapper remarkMapper;
 
     SpareData<JokeBean> spare = new SpareData<>();
 
@@ -134,5 +140,44 @@ public class JokeServiceImpl implements JokeService {
             return spare.failed(e.getMessage());
         }
         return spare.successByInsert();
+    }
+
+    @Override
+    public Callback<JokeBean> selectJokeById(String id) {
+        if (id == null){
+            return spare.failedByParameter();
+        }
+
+        JokeBean joke = mapper.selectById(id);
+
+        if (joke == null){
+            return spare.failedByParameter();
+        }
+        List<RemarkBean> remarks = remarkMapper.selectByJokeId(id);
+        if (remarks == null){
+            remarks = new ArrayList<>();
+        }
+        joke.setRemarks(remarks);
+
+        return spare.successBySelect(joke);
+    }
+
+    @Override
+    public Callback<List<JokeBean>> selectJokeByCollection(String userId) {
+
+        if (userId == null){
+            return spares.failedByParameter();
+        }
+
+        if (userMapper.selectById(userId) == null){
+            return spares.failedByParameter();
+        }
+
+        List<JokeBean> jokes = mapper.selectByCollectionUserId(userId);
+        if (jokes == null){
+            jokes = new ArrayList<>();
+        }
+
+        return spares.successBySelect(jokes);
     }
 }

@@ -7,12 +7,6 @@
         values (#{userId}, #{phone}, #{name}, #{password})
     </insert>
 
-    <insert id="saveCollection">
-        insert into collection(user_id, joke_id)
-        values (#{param1}, #{param2});
-
-    </insert>
-
     <update id="updateIconById">
         update user set icon = #{param2} where user_id = #{param1}
     </update>
@@ -45,10 +39,5 @@
     <select id="getStatus" resultType="java.lang.Boolean">
         select status from user where user_id = #{id};
     </select>
-
-    <select id="selectCollectionIdByUserId" resultType="java.lang.String">
-        select joke_id from collection where user_id = #{userId}
-    </select>
-
 
 </mapper>

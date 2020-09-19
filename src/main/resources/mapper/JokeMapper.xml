@@ -35,4 +35,8 @@
         select * from joke where joke_id = #{id};
     </select>
 
+    <select id="selectByCollectionUserId" resultType="com.training.bean.JokeBean">
+        select * from joke where joke_id in (select joke_id from collection where user_id = #{userId});
+    </select>
+
 </mapper>
