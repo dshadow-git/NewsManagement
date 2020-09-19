@@ -54,7 +54,7 @@ public class JokeServiceImpl implements JokeService {
             count ++;
 
             //把随机生成的整形数据格式化成字符串
-            id = 1 + String.format("%06d", new Random().nextInt(99999));
+            id = 2 + String.format("%06d", new Random().nextInt(99999));
 
             //根据获取id获取joke实例，若为空则未被占用，
             jokeBean = mapper.selectById(id);

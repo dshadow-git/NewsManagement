@@ -22,7 +22,7 @@ public class UserController {
     @Autowired
     UserService service;
 
-    //处理登录请求
+    //处理注册请求
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public void saveRegisterUser(@RequestBody UserBean user, HttpServletResponse response) throws IOException {

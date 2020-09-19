@@ -49,4 +49,15 @@ public class RemarkBean {
     public void setPostTime(Date postTime) {
         this.postTime = postTime;
     }
+
+    @Override
+    public String toString() {
+        return "RemarkBean{" +
+                "remarkId='" + remarkId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", jokeId='" + jokeId + '\'' +
+                ", content='" + content + '\'' +
+                ", postTime=" + postTime +
+                '}';
+    }
 }

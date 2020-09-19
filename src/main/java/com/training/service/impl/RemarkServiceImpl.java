@@ -28,13 +28,14 @@ public class RemarkServiceImpl implements RemarkService {
     @Override
     public Callback<RemarkBean> saveRemark(RemarkBean remark) {
 
-        if (remark == null || !IntactUtils.isIntact(remark.getContent(), remark.getJokeId(), remark.getPostTime(), remark.getUserId())){
+        if (remark == null || !IntactUtils.isIntact(remark.getContent(), remark.getJokeId(), remark.getUserId())){
             return spare.failedByParameter();
         }
 
         int count = mapper.selectCountByJokeId(remark.getJokeId());
-        String remarkId = remark.getJokeId() + String.format("%02s", count);
+        String remarkId = remark.getJokeId() + String.format("%02d", count);
         remark.setRemarkId(remarkId);
+        System.out.println(remark.toString());
         mapper.save(remark);
 
         if (mapper.selectById(remarkId) == null){

@@ -3,8 +3,8 @@
 <mapper namespace="com.training.mapper.RemarkMapper">
 
     <insert id="save" parameterType="com.training.bean.RemarkBean">
-        insert into remark(remark_id, user_id, joke_id, content, post_time)
-        values (#{remarkId}, #{userId}, #{jokeId}, #{content}, post_time)
+        insert into remark(remark_id, user_id, joke_id, content)
+        values (#{remarkId}, #{userId}, #{jokeId}, #{content})
     </insert>
 
     <delete id="deleteById">
