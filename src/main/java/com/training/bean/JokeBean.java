@@ -13,7 +13,9 @@ public class JokeBean {
     private String content;
     private String source;
     private int assortId;
+    private boolean collete = false;
     private List<RemarkBean> remarks;
+    private UserBean user;
 
     public JokeBean(String userId, String title, Timestamp postTime, String content, String source, int assortId) {
         this.userId = userId;
@@ -22,6 +24,14 @@ public class JokeBean {
         this.content = content;
         this.source = source;
         this.assortId = assortId;
+    }
+
+    public void setUser(UserBean user) {
+        this.user = user;
+    }
+
+    public void setCollete(boolean collete) {
+        this.collete = collete;
     }
 
     public JokeBean() {

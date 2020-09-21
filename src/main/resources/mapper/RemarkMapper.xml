@@ -12,7 +12,7 @@
     </delete>
 
     <select id="selectByJokeId" resultType="com.training.bean.RemarkBean">
-        select * from remark where joke_id = #{jokeId} order by post_time desc
+        select * from remark where joke_id = #{jokeId} order by post_time desc, remark_id desc
     </select>
 
     <select id="selectCountByJokeId" resultType="java.lang.Integer">

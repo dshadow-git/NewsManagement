@@ -111,7 +111,7 @@ public class UserController {
     public void selectCollection(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         String userId = request.getParameter("userId");
-        String jokeId = request.getParameter("JokeId");
+        String jokeId = request.getParameter("jokeId");
         response.getWriter().println(new Gson().toJson(service.deleteCollection(userId, jokeId)));
     }
 

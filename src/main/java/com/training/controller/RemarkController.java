@@ -32,9 +32,9 @@ public class RemarkController {
     @RequestMapping(value = "/delete")
     public void deleteRemark(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=utf-8");
-        String id = request.getParameter("id");
+        String remarkId = request.getParameter("remarkId");
         String userId = request.getParameter("userId");
-        response.getWriter().println(new Gson().toJson(service.deleteById(id, userId)));
+        response.getWriter().println(new Gson().toJson(service.deleteById(remarkId, userId)));
     }
 
 }

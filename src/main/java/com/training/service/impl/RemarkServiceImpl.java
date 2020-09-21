@@ -2,7 +2,9 @@ package com.training.service.impl;
 
 import com.training.Callback;
 import com.training.bean.RemarkBean;
+import com.training.bean.UserBean;
 import com.training.mapper.RemarkMapper;
+import com.training.mapper.UserMapper;
 import com.training.service.RemarkService;
 import com.training.utils.IntactUtils;
 import com.training.utils.SpareData;
@@ -16,6 +18,9 @@ public class RemarkServiceImpl implements RemarkService {
 
     @Autowired
     RemarkMapper mapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     SpareData<RemarkBean> spare = new SpareData<>();
     SpareData<List<RemarkBean>> spares = new SpareData<>();
@@ -32,8 +37,16 @@ public class RemarkServiceImpl implements RemarkService {
             return spare.failedByParameter();
         }
 
-        int count = mapper.selectCountByJokeId(remark.getJokeId());
-        String remarkId = remark.getJokeId() + String.format("%02d", count);
+        List<RemarkBean> remarks = mapper.selectByJokeId(remark.getJokeId());
+        String remarkId;
+        System.out.println("size:" + remarks.size());
+        if (remarks.size() == 0){
+            remarkId = remark.getJokeId() + "00";
+        } else {
+            remarkId = Long.parseLong(remarks.get(0).getRemarkId())+1 + "";
+            System.out.println("remarks:" + remarks.get(0).toString());
+        }
+        System.out.println("id:" + remarkId);
         remark.setRemarkId(remarkId);
         System.out.println(remark.toString());
         mapper.save(remark);
@@ -46,7 +59,22 @@ public class RemarkServiceImpl implements RemarkService {
 
     @Override
     public Callback<List<RemarkBean>> selectByJokeId(String jokeId) {
-        return null;
+
+        if (jokeId == null){
+            return spares.failedByParameter();
+        }
+
+        List<RemarkBean> remarks = mapper.selectByJokeId(jokeId);
+        if (remarks == null || remarks.size() == 0){
+            return spares.failedByParameter();
+        }
+        for (RemarkBean remark : remarks){
+            UserBean user = userMapper.selectById(remark.getUserId());
+            if (user != null){
+                remark.setUser(user);
+            }
+        }
+        return spares.successBySelect(remarks);
     }
 
     @Override

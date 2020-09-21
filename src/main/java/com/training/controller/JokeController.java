@@ -46,8 +46,9 @@ public class JokeController {
     @RequestMapping(value = "/select/id", method = RequestMethod.GET)
     public void selectById(HttpServletResponse response, HttpServletRequest request) throws IOException {
         response.setContentType("text/html;charset=utf-8");
-        String id = request.getParameter("jokeId");
-        response.getWriter().println(new Gson().toJson(service.selectJokeById(id)));
+        String jokeId = request.getParameter("jokeId");
+        String userId = request.getParameter("userId");
+        response.getWriter().println(new Gson().toJson(service.selectJokeById(jokeId, userId)));
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json; charset=utf-8")

@@ -4,10 +4,12 @@ import com.training.Callback;
 import com.training.bean.JokeBean;
 import com.training.bean.RemarkBean;
 import com.training.bean.UserBean;
+import com.training.mapper.CollectionMapper;
 import com.training.mapper.JokeMapper;
 import com.training.mapper.RemarkMapper;
 import com.training.mapper.UserMapper;
 import com.training.service.JokeService;
+import com.training.service.RemarkService;
 import com.training.utils.IntactUtils;
 import com.training.utils.SpareData;
 import org.apache.ibatis.session.SqlSessionException;
@@ -29,6 +31,12 @@ public class JokeServiceImpl implements JokeService {
 
     @Autowired
     RemarkMapper remarkMapper;
+
+    @Autowired
+    CollectionMapper collectionMapper;
+
+    @Autowired
+    RemarkService remarkService;
 
     SpareData<JokeBean> spare = new SpareData<>();
 
@@ -75,7 +83,7 @@ public class JokeServiceImpl implements JokeService {
                 mapper.updateSourceById(joke.getJokeId(), joke.getSource());
             }
 
-            return spare.successByInsert();
+            return spare.successBySelect(joke);
         }
     }
 
@@ -143,22 +151,36 @@ public class JokeServiceImpl implements JokeService {
     }
 
     @Override
-    public Callback<JokeBean> selectJokeById(String id) {
-        if (id == null){
+    public Callback<JokeBean> selectJokeById(String jokeId, String userId) {
+        if (jokeId == null){
             return spare.failedByParameter();
         }
 
-        JokeBean joke = mapper.selectById(id);
+        JokeBean joke = mapper.selectById(jokeId);
 
         if (joke == null){
             return spare.failedByParameter();
         }
-        List<RemarkBean> remarks = remarkMapper.selectByJokeId(id);
-        if (remarks == null){
+
+        if (collectionMapper.selectByUserIdJokeId(userId, jokeId) != null){
+            joke.setCollete(true);
+        }
+
+        UserBean user = userMapper.selectById(joke.getUserId());
+        if (user == null){
+            user = new UserBean();
+        }
+
+        joke.setUser(user);
+
+        List<RemarkBean> remarks;
+        Callback<List<RemarkBean>> callback = remarkService.selectByJokeId(jokeId);
+        if (callback.getCode() == SpareData.CALL_SUCCESS){
+            remarks = callback.getData();
+        } else {
             remarks = new ArrayList<>();
         }
         joke.setRemarks(remarks);
-
         return spare.successBySelect(joke);
     }
 

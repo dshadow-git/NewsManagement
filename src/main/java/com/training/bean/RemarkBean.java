@@ -9,6 +9,11 @@ public class RemarkBean {
     private String jokeId;
     private String content;
     private Date postTime;
+    private UserBean user;
+
+    public void setUser(UserBean user) {
+        this.user = user;
+    }
 
     public String getRemarkId() {
         return remarkId;
